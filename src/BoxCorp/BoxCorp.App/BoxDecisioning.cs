@@ -1,46 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace BoxCorp.App
 {
     public class BoxDecisioning
     {
-        private readonly List<Box> _sortedList = new List<Box>();
+        private readonly SortedList<int, Box> _list = new SortedList<int, Box>();
 
-        private const decimal LowRankThreshold = 0.5M;
+        private readonly SortedList<decimal, Box> _sortedList = new SortedList<decimal, Box>(new HighRankFirstComparer());
 
-        public int BoxCount => _sortedList.Count;
+        public int BoxCount => _list.Count;
 
-        public void Push(Box box)
+        public void Push(int id, Box box)
         {
-            _sortedList.Add(box);
+            if (box.Rank < Consts.LowRankThreshold)
+            {
+                return;
+            }
+
+            _list.Add(id, box);
+
+            _sortedList.Add(box.Rank, box);
         }
 
-        public void RemoveLowRankBoxes()
+        public ICollection<Box> Decisioning()
         {
-            _sortedList.Sort(new LowRankFirstComparer());
+            var comparer = new RealRankComparer();
+            var set = new SortedSet<Box>(_sortedList.Values, comparer);
 
-            var rank = _sortedList.FirstOrDefault()?.Rank;
-            while (rank.HasValue && rank.Value < LowRankThreshold)
+            foreach (var id in comparer.IgnoredBoxes)
             {
-                _sortedList.RemoveAt(0);
-                rank = _sortedList.FirstOrDefault()?.Rank;
+                _list.Remove(id);
             }
-        }
 
-        public void Decisioning()
-        {
-            _sortedList.Sort();
-
-            for (int i = _sortedList.Count - 1; i >= 0; i--)
-            {
-                Box item = _sortedList[i];
-                if (item.Ignored)
-                {
-                    _sortedList.Remove(item);
-                }
-            }
+            return _list.Values;
         }
     }
 }

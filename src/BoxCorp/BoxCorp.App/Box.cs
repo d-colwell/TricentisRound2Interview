@@ -5,18 +5,21 @@ namespace BoxCorp.App
 {
     public class Box : IComparable<Box>
     {
-        public Box(int x, int y, int width, int height, decimal rank)
-        {
-            Rectangle = Rectangle.FromLTRB(x, y, x + width, y + height);
-            Rank = rank;
-            Ignored = false;
-        }
+        public int Id { get; }
 
         public Rectangle Rectangle { get; }
 
         public decimal Rank { get; }
 
         public bool Ignored { get; private set; }
+
+        public Box(int id, int x, int y, int width, int height, decimal rank)
+        {
+            Id = id;
+            Rectangle = Rectangle.FromLTRB(x, y, x + width, y + height);
+            Rank = rank;
+            Ignored = false;
+        }
 
         public int CompareTo(Box other)
         {
