@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+
 namespace BoxCorp.App.Tests
 {
     [TestFixture]
@@ -10,10 +11,10 @@ namespace BoxCorp.App.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            _boxBlue = new Box(2, 2, 6, 5, 0.8M);
-            _boxGreen = new Box(3, 3, 6, 4, 0.6M);
-            _boxYellow = new Box(2, 8, 4, 3, 0.9M);
-            _boxPurple = new Box(8, 9, 2, 2, 0.3M);
+            _boxBlue = new Box(1, 2, 2, 6, 5, 0.8M);
+            _boxGreen = new Box(2, 3, 3, 6, 4, 0.6M);
+            _boxYellow = new Box(3, 2, 8, 4, 3, 0.9M);
+            _boxPurple = new Box(4, 8, 9, 2, 2, 0.3M);
         }
 
         [Test]
@@ -26,29 +27,6 @@ namespace BoxCorp.App.Tests
             jaqardIndex = _boxGreen.JaqardIndexWith(_boxBlue);
 
             jaqardIndex.Should().Be(0.58);
-        }
-
-        [Test]
-        public void CompareShouldHaveNoResultWhenBoxesHaveNoIntersect()
-        {
-            var result = _boxYellow.CompareTo(_boxBlue);
-
-            result.Should().Be(0);
-        }
-
-        [Test]
-        public void BoxWithLowerRankShouldBeIgnoredWhenJaqardIndexGreaThanThreshold()
-        {
-            var result = _boxBlue.CompareTo(_boxGreen);
-
-            result.Should().Be(1);
-            _boxGreen.Ignored.Should().BeTrue();
-            _boxBlue.Ignored.Should().BeFalse();
-
-            result = _boxGreen.CompareTo(_boxBlue);
-            result.Should().Be(-1);
-            _boxGreen.Ignored.Should().BeTrue();
-            _boxBlue.Ignored.Should().BeFalse();
         }
     }
 }

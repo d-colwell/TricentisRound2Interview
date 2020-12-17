@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace BoxCorp.App
 {
-    public class Box : IComparable<Box>
+    public class Box
     {
         public int Id { get; }
 
@@ -11,63 +11,11 @@ namespace BoxCorp.App
 
         public decimal Rank { get; }
 
-        public bool Ignored { get; private set; }
-
         public Box(int id, int x, int y, int width, int height, decimal rank)
         {
             Id = id;
             Rectangle = Rectangle.FromLTRB(x, y, x + width, y + height);
             Rank = rank;
-            Ignored = false;
-        }
-
-        public int CompareTo(Box other)
-        {
-            var jaqardIndex = JaqardIndexWith(other);
-
-            // no intersect, keep both
-            if (jaqardIndex == 0)
-            {
-                return 0;
-            }
-
-            if (jaqardIndex > Consts.JaqardIndexThreshold)
-            {
-                if (Rank > other.Rank)
-                {
-                    other.Ignored = true;
-                    return 1;
-                }
-
-                if (Rank < other.Rank)
-                {
-                    this.Ignored = true;
-                    return -1;
-                }
-
-                //same rank
-                return 0;
-            }
-
-            if (jaqardIndex < Consts.JaqardIndexThreshold)
-            {
-                if (Rank > other.Rank)
-                {
-                    this.Ignored = true;
-                    return -1;
-                }
-
-                if (Rank < other.Rank)
-                {
-                    other.Ignored = true;
-                    return 1;
-                }
-
-                return 0;
-            }
-
-
-            return 0; //keep if == threshold
         }
 
         public double JaqardIndexWith(Box other)

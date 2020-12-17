@@ -1,4 +1,4 @@
-# CorpCorp Box Decisioning Algoritm
+# CorpCorp Box Decisioning Algorithm
 ## Our Objective
 We here at Corpcorp are very concerned with Boxes. People often send us files, full of boxes and we are then responsible for chosing the best boxes out of this file. In order to get only the finest boxes we
 1. Look for overlapping boxes, and choose the best 1 based on a formula
